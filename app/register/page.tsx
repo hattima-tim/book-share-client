@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSignUp } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Gift, Eye, EyeOff } from "lucide-react";
@@ -17,10 +17,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import PasswordRequirement from "@/components/passwordRequirement";
+import Verification from "./verification";
 
 export default function RegisterPage() {
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const router = useRouter();
+  const { isLoaded, signUp } = useSignUp();
   const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState({
@@ -41,7 +41,6 @@ export default function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [pendingVerification, setPendingVerification] = useState(false);
@@ -117,90 +116,16 @@ export default function RegisterPage() {
     }
   };
 
-  const handleVerification = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isLoaded) return;
-
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: verificationCode,
-      });
-
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.push("/dashboard");
-      } else {
-        setError("Verification could not be completed. Please try again.");
-      }
-    } catch (err: any) {
-      console.error("Verification error:", err);
-      setError(
-        err.errors?.[0]?.longMessage ||
-          err.errors?.[0]?.message ||
-          "Invalid verification code"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   if (pendingVerification) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4 py-8">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-                <BookOpen className="h-6 w-6 text-primary-foreground" />
-              </div>
-            </div>
-            <CardTitle className="text-2xl">Verify Your Email</CardTitle>
-            <CardDescription>
-              We sent a verification code to {formData.email}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleVerification} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              <div className="space-y-2">
-                <Label htmlFor="code">Verification Code</Label>
-                <Input
-                  id="code"
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  maxLength={6}
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading || !isLoaded}
-              >
-                {isLoading ? "Verifying..." : "Verify Email"}
-              </Button>
-            </form>
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setPendingVerification(false)}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                ← Back to sign up
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Verification
+        formData={formData}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        error={error}
+        setError={setError}
+        setPendingVerification={setPendingVerification}
+      />
     );
   }
 
