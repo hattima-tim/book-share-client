@@ -93,7 +93,9 @@ export default function RegisterPage() {
         emailAddress: email,
         password,
         firstName: name.split(" ")[0],
-        lastName: name.split(" ").slice(1).join(" ") || undefined,
+        ...(name.split(" ").slice(1).join(" ")
+          ? { lastName: name.split(" ").slice(1).join(" ") }
+          : {}),
         unsafeMetadata: {
           referralCode: referralCode || undefined,
         },

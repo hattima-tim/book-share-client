@@ -9,6 +9,9 @@
 
   --success: oklch(0.65 0.15 145);
   --success-foreground: oklch(0.98 0.005 85);
+
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
 }
 
 @theme inline {
@@ -20,6 +23,8 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 }
 
 body {
