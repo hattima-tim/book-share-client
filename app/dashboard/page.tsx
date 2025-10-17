@@ -13,6 +13,7 @@ import { auth } from "@clerk/nextjs/server";
 import { BookOpen, LogOut, Coins, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { ReferralSection } from "./referralSection";
+import { ReferralStats } from "./referralStats";
 
 const DashboardPage = async () => {
   const { getToken } = await auth();
@@ -123,7 +124,7 @@ const DashboardPage = async () => {
 
           <TabsContent value="referrals" className="space-y-4">
             <ReferralSection dashboardData={dashboardData} />
-            {/* <ReferralStats userId={user.id} /> */}
+            <ReferralStats dashboardData={dashboardData} />
           </TabsContent>
 
           <TabsContent value="store">
