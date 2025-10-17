@@ -18,15 +18,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+      "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:pointer-events-none";
 
     const variants = {
       default:
         "bg-foreground text-background hover:bg-foreground/90 focus:ring-foreground",
       outline:
         "border-2 border-border bg-transparent hover:bg-accent hover:text-accent-foreground focus:ring-foreground",
-      ghost:
-        "hover:bg-accent hover:text-accent-foreground focus:ring-foreground",
+      ghost: "hover:bg-accent hover:text-accent-foreground",
       destructive:
         "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus:ring-destructive",
     };

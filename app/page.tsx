@@ -1,9 +1,8 @@
-"use client";
-
 import { BookOpen, Gift, Users, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/cards";
+import { SignedOut } from "@clerk/nextjs";
 
 export default function LandingPage() {
   return (
@@ -16,12 +15,14 @@ export default function LandingPage() {
             <span className="text-xl font-bold text-foreground">BookShare</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost">Log In</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Get Started</Button>
-            </Link>
+            <SignedOut>
+              <Link href="/login">
+                <Button variant="ghost">Log In</Button>
+              </Link>
+              <Link href="/register">
+                <Button>Get Started</Button>
+              </Link>
+            </SignedOut>
           </div>
         </div>
       </header>
