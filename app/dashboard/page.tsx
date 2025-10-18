@@ -98,7 +98,8 @@ const DashboardPage = async () => {
             </CardContent>
           </Card>
 
-          {dashboardData.convertedUsers < 1 ? (
+          {dashboardData.referredBy &&
+          dashboardData.totalCreditsEarned === 0 ? (
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -136,7 +137,7 @@ const DashboardPage = async () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/store">
+                <Link href="/products">
                   <Button>Browse E-books</Button>
                 </Link>
               </CardContent>

@@ -7,6 +7,7 @@ export interface IUser {
   totalReferredUsers: number;
   name: string;
   createdAt: string;
+  referredBy: string | null;
 }
 
 export interface DashboardResponse {
@@ -16,5 +17,6 @@ export interface DashboardResponse {
   referralLink: string;
   referralCode: string;
   name: string;
+  referredBy: string | null;
   referredUsers: (IUser & { status: "pending" | "converted" })[];
 }
