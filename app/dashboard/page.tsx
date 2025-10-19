@@ -73,7 +73,7 @@ const DashboardPage = async () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {dashboardData.totalCreditsEarned}
+                {dashboardData.currentBalance}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 Available to spend

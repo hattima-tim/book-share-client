@@ -10,9 +10,11 @@ import { DashboardResponse } from "@/types/dashboard";
 const PurchaseButton = ({
   product,
   user,
+  onOptimisticUpdate,
 }: {
   product: Product;
   user: DashboardResponse;
+  onOptimisticUpdate: (creditsUsed: number) => void;
 }) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -29,6 +31,7 @@ const PurchaseButton = ({
           user={user}
           open={!!selectedProduct}
           onOpenChange={(open) => !open && setSelectedProduct(null)}
+          onOptimisticUpdate={onOptimisticUpdate}
         />
       )}
     </>

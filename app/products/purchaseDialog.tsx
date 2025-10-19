@@ -22,6 +22,7 @@ interface PurchaseDialogProps {
   user: DashboardResponse;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOptimisticUpdate: (creditsUsed: number) => void;
 }
 
 export function PurchaseDialog({
@@ -29,6 +30,7 @@ export function PurchaseDialog({
   user,
   open,
   onOpenChange,
+  onOptimisticUpdate,
 }: PurchaseDialogProps) {
   const { getToken } = useAuth();
   const router = useRouter();
@@ -43,8 +45,15 @@ export function PurchaseDialog({
   const creditCoverage = creditsToUse * CREDIT_VALUE;
   const remainingAmount = Math.max(0, product.price - creditCoverage);
 
+  const isFirstPurchase = user.totalCreditsEarned === 0 && user.referredBy;
+  const creditsEarned = isFirstPurchase ? 2 : 0;
+  const netCreditChange = creditsEarned - creditsToUse;
+
   const handlePurchase = async () => {
     setIsProcessing(true);
+
+    onOptimisticUpdate(netCreditChange);
+
     try {
       const token = await getToken();
       const response = await fetch(
@@ -154,7 +163,12 @@ export function PurchaseDialog({
                     Credits After Purchase
                   </span>
                   <span className="font-semibold text-foreground">
-                    {user.currentBalance - creditsToUse} credits
+                    {user.currentBalance + netCreditChange} credits
+                    {isFirstPurchase && (
+                      <span className="text-xs text-success ml-1">
+                        (+2 bonus)
+                      </span>
+                    )}
                   </span>
                 </div>
               </div>
