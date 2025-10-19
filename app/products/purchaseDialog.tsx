@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { Product } from "@/types/product";
 import { DashboardResponse } from "@/types/dashboard";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface PurchaseDialogProps {
   product: Product;
@@ -28,6 +30,8 @@ export function PurchaseDialog({
   open,
   onOpenChange,
 }: PurchaseDialogProps) {
+  const { getToken } = useAuth();
+  const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [purchaseComplete, setPurchaseComplete] = useState(false);
   const [message, setMessage] = useState("");
@@ -41,12 +45,40 @@ export function PurchaseDialog({
 
   const handlePurchase = async () => {
     setIsProcessing(true);
-    // Simulate purchase process
-    setTimeout(() => {
-      setIsProcessing(false);
+    try {
+      const token = await getToken();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/purchase`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product._id,
+            productName: product.title,
+            amount: product.price,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Something went wrong. Please try again later."
+        );
+      }
+
+      router.refresh();
       setPurchaseComplete(true);
-      setMessage("Your e-book is ready to read.");
-    }, 2000);
+      setIsProcessing(false);
+    } catch (error: any) {
+      setIsProcessing(false);
+      setMessage(
+        error.message || "Something went wrong. Please try again later."
+      );
+    }
   };
 
   const handleClose = () => {
@@ -175,7 +207,7 @@ export function PurchaseDialog({
           </div>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="mt-6">
           {!purchaseComplete ? (
             <>
               <Button
