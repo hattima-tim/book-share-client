@@ -16,6 +16,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
+import { SectionErrorBoundary } from "@/components/ui/error-boundary";
 
 export default function LoginPage() {
   const { isSignedIn } = useUser();
@@ -73,78 +74,80 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mb-4 flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-              <BookOpen className="h-6 w-6 text-primary-foreground" />
+      <SectionErrorBoundary>
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mb-4 flex justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
+                <BookOpen className="h-6 w-6 text-primary-foreground" />
+              </div>
             </div>
-          </div>
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>Sign in to your BookShare account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+            <CardTitle className="text-2xl">Welcome Back</CardTitle>
+            <CardDescription>Sign in to your BookShare account</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isLoading}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading || !isLoaded}
+              >
+                {isLoading ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center text-sm">
+              <span className="text-muted-foreground">
+                {"Don't have an account? "}
+              </span>
+              <Link href="/register" className="text-primary hover:underline">
+                Sign up
+              </Link>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-              />
+            <div className="mt-4 text-center">
+              <Link
+                href="/"
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
+                ← Back to home
+              </Link>
             </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading || !isLoaded}
-            >
-              {isLoading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center text-sm">
-            <span className="text-muted-foreground">
-              {"Don't have an account? "}
-            </span>
-            <Link href="/register" className="text-primary hover:underline">
-              Sign up
-            </Link>
-          </div>
-
-          <div className="mt-4 text-center">
-            <Link
-              href="/"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              ← Back to home
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </SectionErrorBoundary>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/cards";
+import { ComponentErrorBoundary } from "@/components/ui/error-boundary";
 import { DashboardResponse } from "@/types/dashboard";
 import { Users, CheckCircle, Clock, Coins } from "lucide-react";
 
@@ -73,42 +74,41 @@ export function ReferralStats({ dashboardData }: ReferralStatsProps) {
           <CardContent>
             <div className="space-y-3">
               {dashboardData.referredUsers.map((referral) => (
-                <div
-                  key={referral._id}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                      <span className="text-sm font-semibold text-foreground">
-                        {referral.name.charAt(0).toUpperCase() || "?"}
-                      </span>
+                <ComponentErrorBoundary key={referral._id}>
+                  <div className="flex items-center justify-between rounded-lg border p-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                        <span className="text-sm font-semibold text-foreground">
+                          {referral.name.charAt(0).toUpperCase() || "?"}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">
+                          {referral.name || "Unknown User"}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(referral.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {referral.name || "Unknown User"}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(referral.createdAt).toLocaleDateString()}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      {referral.status === "converted" ? (
+                        <Badge
+                          variant="default"
+                          className="bg-success text-white"
+                        >
+                          <CheckCircle className="mr-1 h-3 w-3" />
+                          Converted
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">
+                          <Clock className="mr-1 h-3 w-3" />
+                          Pending
+                        </Badge>
+                      )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {referral.status === "converted" ? (
-                      <Badge
-                        variant="default"
-                        className="bg-success text-white"
-                      >
-                        <CheckCircle className="mr-1 h-3 w-3" />
-                        Converted
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">
-                        <Clock className="mr-1 h-3 w-3" />
-                        Pending
-                      </Badge>
-                    )}
-                  </div>
-                </div>
+                </ComponentErrorBoundary>
               ))}
             </div>
           </CardContent>

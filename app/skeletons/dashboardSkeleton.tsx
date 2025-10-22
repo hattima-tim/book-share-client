@@ -43,7 +43,7 @@ export function DashboardSkeleton() {
 
         {/* Tabs Skeleton */}
         <div className="space-y-4">
-          <div className="flex gap-2 border-b">
+          <div className="flex gap-2">
             <Skeleton className="h-10 w-24" />
             <Skeleton className="h-10 w-32" />
           </div>

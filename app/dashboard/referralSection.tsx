@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Check, Share2 } from "lucide-react";
 import { DashboardResponse } from "@/types/dashboard";
+import { ComponentErrorBoundary } from "@/components/ui/error-boundary";
 
 interface ReferralSectionProps {
   dashboardData: DashboardResponse;
@@ -112,30 +113,34 @@ export function ReferralSection({ dashboardData }: ReferralSectionProps) {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={handleLinkCopy} className="flex-1">
-            {copied.link ? (
-              <>
-                <Check className="mr-2 h-4 w-4" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="mr-2 h-4 w-4" />
-                Copy Link
-              </>
-            )}
-          </Button>
+          <ComponentErrorBoundary>
+            <Button onClick={handleLinkCopy} className="flex-1">
+              {copied.link ? (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy Link
+                </>
+              )}
+            </Button>
+          </ComponentErrorBoundary>
 
           {/* @ts-expect-error not available in firefox */}
           {navigator.share ? (
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="flex-1 bg-transparent"
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              Share
-            </Button>
+            <ComponentErrorBoundary>
+              <Button
+                onClick={handleShare}
+                variant="outline"
+                className="flex-1 bg-transparent"
+              >
+                <Share2 className="mr-2 h-4 w-4" />
+                Share
+              </Button>
+            </ComponentErrorBoundary>
           ) : null}
         </div>
       </CardContent>

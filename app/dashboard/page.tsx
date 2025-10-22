@@ -14,22 +14,38 @@ import { BookOpen, LogOut, Coins, Users, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { ReferralSection } from "./referralSection";
 import { ReferralStats } from "./referralStats";
+import { SectionErrorBoundary } from "@/components/ui/error-boundary";
 
 const DashboardPage = async () => {
   const { getToken } = await auth();
   const token = await getToken();
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/dashboard`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  let dashboardData: DashboardResponse;
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/dashboard`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch dashboard data: ${response.status}`);
     }
-  );
-  const dashboardData: DashboardResponse = await response.json();
+
+    dashboardData = await response.json();
+  } catch (error) {
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "development") {
+      console.error(error);
+    }
+
+    throw error;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -124,8 +140,12 @@ const DashboardPage = async () => {
           </TabsList>
 
           <TabsContent value="referrals" className="space-y-4">
-            <ReferralSection dashboardData={dashboardData} />
-            <ReferralStats dashboardData={dashboardData} />
+            <SectionErrorBoundary>
+              <ReferralSection dashboardData={dashboardData} />
+            </SectionErrorBoundary>
+            <SectionErrorBoundary>
+              <ReferralStats dashboardData={dashboardData} />
+            </SectionErrorBoundary>
           </TabsContent>
 
           <TabsContent value="store">

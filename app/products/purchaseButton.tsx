@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Product } from "@/types/product";
 import { DashboardResponse } from "@/types/dashboard";
+import { ComponentErrorBoundary } from "@/components/ui/error-boundary";
 
 const PurchaseButton = ({
   product,
@@ -26,13 +27,15 @@ const PurchaseButton = ({
       </Button>
 
       {selectedProduct && (
-        <PurchaseDialog
-          product={selectedProduct}
-          user={user}
-          open={!!selectedProduct}
-          onOpenChange={(open) => !open && setSelectedProduct(null)}
-          onOptimisticUpdate={onOptimisticUpdate}
-        />
+        <ComponentErrorBoundary>
+          <PurchaseDialog
+            product={selectedProduct}
+            user={user}
+            open={!!selectedProduct}
+            onOpenChange={(open) => !open && setSelectedProduct(null)}
+            onOptimisticUpdate={onOptimisticUpdate}
+          />
+        </ComponentErrorBoundary>
       )}
     </>
   );
