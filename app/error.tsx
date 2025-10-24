@@ -12,11 +12,13 @@ import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 
 export default function Error({
   error,
-  reset,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
 }) {
+  const handleReset = () => {
+    window.location.reload()
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
@@ -34,7 +36,7 @@ export default function Error({
             </AlertDescription>
           </Alert>
           <div className="flex gap-2 justify-center">
-            <Button onClick={reset} variant="outline" size="sm">
+            <Button onClick={handleReset} variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
             </Button>
