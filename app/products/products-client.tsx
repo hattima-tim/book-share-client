@@ -47,7 +47,7 @@ export function ProductsClient({
               </span>
             </div>
             <SignOutButton>
-              <LogOutIcon className="h-5 w-5" />
+              <LogOutIcon className="h-5 w-5 cursor-pointer" />
             </SignOutButton>
           </div>
         </div>

@@ -63,7 +63,7 @@ const DashboardPage = async () => {
               </span>
             </div>
             <SignOutButton>
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-5 w-5 cursor-pointer" />
             </SignOutButton>
           </div>
         </div>
